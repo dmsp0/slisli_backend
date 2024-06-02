@@ -1,0 +1,7 @@
+spring:
+    application:
+        name : backend
+
+# 서버 설정
+server:
+    port: 7777
