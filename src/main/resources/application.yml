@@ -11,7 +11,7 @@ spring:
 
     jpa:
         hibernate:
-            ddl-auto: create
+            ddl-auto: update
         properties:
             hibernate:
                 show_sql: true
@@ -27,3 +27,5 @@ security:
 #            15분
             refresh-token-expiration: 3600000
 #           1시간
+exhibition:
+    apiKey: f/yYy8svm3t0PGLHgpkhrFhC6SYzwr4ZDpzGe9/6CYxCWCmGcRCh0iAeIArWF6hZHJ8CS/7NMAhWRB/V6Yjl3A==
