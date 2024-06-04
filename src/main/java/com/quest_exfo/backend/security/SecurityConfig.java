@@ -38,7 +38,7 @@ public class SecurityConfig{
             .cors(Customizer.withDefaults())
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(
-                    "/fetch-exhibitions",
+                    "/api/exhibition/**",
                     "/api/member/login",
                     "/api/member/signup",
                     "/api/member/checkPassword",
