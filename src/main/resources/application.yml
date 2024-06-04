@@ -1,7 +1,29 @@
-spring:
-    application:
-        name : backend
-
 # 서버 설정
 server:
-    port: 7777
+    port: 8080
+
+spring:
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/slisli
+        username: root
+        password: Sjrnfl77&&
+
+    jpa:
+        hibernate:
+            ddl-auto: create
+        properties:
+            hibernate:
+                show_sql: true
+                format_sql: true
+        database-platform: org.hibernate.dialect.MySQL8Dialect
+
+
+security:
+    jwt:
+        token:
+            secret-key: "생성된 secret key를 여기에 넣으세요"
+            access-token-expiration: 900000
+#            15분
+            refresh-token-expiration: 3600000
+#           1시간
