@@ -1,6 +1,5 @@
-package com.quest_exfo.backend.dto.response;
+package com.quest_exfo.backend.notused;
 
-import com.quest_exfo.backend.dto.request.ExhibitionRequestDTO;
 import lombok.Data;
 import java.util.List;
 

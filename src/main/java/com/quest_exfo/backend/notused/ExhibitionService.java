@@ -1,9 +1,5 @@
-package com.quest_exfo.backend.service;
+package com.quest_exfo.backend.notused;
 
-import com.quest_exfo.backend.dto.request.ExhibitionRequestDTO;
-import com.quest_exfo.backend.dto.response.ExhibitionResponseDTO;
-import com.quest_exfo.backend.entity.Exhibition;
-import com.quest_exfo.backend.repository.ExhibitionRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -11,7 +7,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

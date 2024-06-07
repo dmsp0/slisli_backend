@@ -1,4 +1,4 @@
-package com.quest_exfo.backend.dto.request;
+package com.quest_exfo.backend.notused;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

@@ -16,9 +16,11 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOriginPattern("*");
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
+        config.addAllowedOriginPattern("*"); // 모든 출처 허용
+        config.addAllowedHeader("*"); // 모든 헤더 허용
+        config.addAllowedMethod("*"); // 모든 HTTP 메소드 허용
+        config.setExposedHeaders(Arrays.asList("Authorization", "Link", "X-Total-Count")); // 클라이언트에 노출할 헤더 추가
+        config.setMaxAge(3600L); // pre-flight 요청 캐싱 시간 설정
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
