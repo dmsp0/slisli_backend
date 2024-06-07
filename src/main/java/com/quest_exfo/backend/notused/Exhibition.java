@@ -1,4 +1,4 @@
-package com.quest_exfo.backend.entity;
+package com.quest_exfo.backend.notused;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

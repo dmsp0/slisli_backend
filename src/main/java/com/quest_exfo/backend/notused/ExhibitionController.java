@@ -1,6 +1,5 @@
-package com.quest_exfo.backend.controller;
+package com.quest_exfo.backend.notused;
 
-import com.quest_exfo.backend.service.ExhibitionService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
