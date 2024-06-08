@@ -40,3 +40,5 @@ out/
 application-db.yml
 application-oauth.yml
 application-secret.yml
+
+**/src/main/resources/static/**
