@@ -1,8 +1,11 @@
 package com.quest_exfo.backend.repository;
 
+import com.quest_exfo.backend.common.BoothCategory;
 import com.quest_exfo.backend.entity.Booth;
 import java.time.LocalDate;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -15,4 +18,6 @@ public interface BoothRepository extends JpaRepository<Booth, Long> {
   List<Integer> findVideoRoomIdsByDate(LocalDate date);
 
 
+  Page<Booth> findAllByOrderByDateDesc(Pageable pageable);
+  Page<Booth> findByCategoryOrderByDateDesc(BoothCategory category, Pageable pageable);
 }

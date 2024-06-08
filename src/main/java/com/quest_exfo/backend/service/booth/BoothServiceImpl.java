@@ -39,13 +39,13 @@ public class BoothServiceImpl implements BoothService {
     String uniqueFileName = UUID.randomUUID().toString() + "_" + originalFileName;
 
     // 파일저장
-    Path uploadPath = Paths.get("uploads");
+    Path uploadPath = Paths.get("src/main/resources/static/uploads");
     if (!Files.exists(uploadPath)) {
       Files.createDirectories(uploadPath);
     }
     Path filePath = uploadPath.resolve(uniqueFileName);
     Files.write(filePath, file.getBytes());
-    booth.setImgPath(filePath.toString());
+    booth.setImgPath("/uploads/" + uniqueFileName); // 경로를 절대 경로로 설정
 
     // 비디오룸 ID생성
     int videoRoomId = generateUniqueVideoRoomId(boothDTO.getDate());
@@ -55,7 +55,7 @@ public class BoothServiceImpl implements BoothService {
   }
 
   private int generateUniqueVideoRoomId(LocalDate date) {
-    // 주어진 날짜에 이미 사용된 비디오룸 ID 목록을 조회합니다.
+    // 주어진 날짜에 이미 사용된 비디오룸 ID 목록을 조회.
     List<Integer> usedIds = boothRepository.findVideoRoomIdsByDate(date);
 
     // 랜덤 숫자를 생성하기 위한 Random 인스턴스를 생성.
