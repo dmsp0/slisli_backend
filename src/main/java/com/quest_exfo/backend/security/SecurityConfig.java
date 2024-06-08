@@ -37,21 +37,19 @@ public class SecurityConfig{
             .csrf(CsrfConfigurer::disable)
             .cors(Customizer.withDefaults())
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers(
-                    "/api/exhibition/**",
-                    "/api/booths/**",
-                    "/uploads/**",
-                    "/api/member/login",
-                    "/api/member/signup",
-                    "/api/member/checkPassword",
-                    "/api/member/checkEmail",
-                    "/api/postTest",
-                    "/api/getTest"
-                ).permitAll()
-                // 마이페이지 등 user 권한이 있어야 접근 가능한 부분 추가
-                // 정보수정은 로그인 후에 접근하도록함
-                .requestMatchers("/api/member/update").hasRole("USER")
-                .anyRequest().authenticated()
+                    .requestMatchers(
+                            "/api/exhibition/**",
+                            "/api/booths/**",
+                            "/uploads/**",
+                            "/login",
+                            "/signup",
+                            "/checkPassword",
+                            "/checkEmail",
+                            "/postTest",
+                            "/getTest"
+                    ).permitAll()
+                    .requestMatchers("/update").hasRole("USER")
+                    .anyRequest().authenticated()
             )
             // 세션 관리 및 예외 처리, 필터 설정
             .sessionManagement(session -> session
