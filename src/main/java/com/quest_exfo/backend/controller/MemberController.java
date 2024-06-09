@@ -16,12 +16,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("")
+//@RequestMapping("")
 @RequiredArgsConstructor
 public class MemberController {
 
     private final MemberServiceItf memberServiceItf;
-
+    @GetMapping("/test")
+    public String testEndpoint() {
+        return "Hello from /test endpoint!";
+    }
     @GetMapping("/checkEmail")
     public ResponseEntity<?> checkEmailDuplicate(@RequestParam String email){
         memberServiceItf.checkEmailDuplicate(email);
@@ -31,12 +34,18 @@ public class MemberController {
     @PostMapping("/signup")
     public ResponseEntity<MemberResponseDTO> signup(@RequestBody MemberSignupDTO memberSignupDTO){
         MemberResponseDTO successSignup = memberServiceItf.signup(memberSignupDTO);
+        System.out.println("회원가입 성공");
         return ResponseEntity.status(HttpStatus.CREATED).body(successSignup);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
     @PostMapping("/login")
     public ResponseEntity<MemberTokenDTO> login(@RequestBody MemberLoginDTO memberLoginDTO){
         MemberTokenDTO loginToken = memberServiceItf.login(memberLoginDTO);
+        System.out.println("로그인 성공");
         return ResponseEntity.status(HttpStatus.OK).header(loginToken.getToken()).body(loginToken);
     }
 
