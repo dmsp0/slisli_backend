@@ -6,8 +6,8 @@ spring:
     datasource:
         driver-class-name: com.mysql.cj.jdbc.Driver
         url: jdbc:mysql://localhost:3306/slisli
-        username: root
-        password: Sjrnfl77&&
+        username: slislideveloper
+        password: P!ssw0rd
 
     jpa:
         hibernate:
@@ -24,8 +24,21 @@ security:
         token:
             secret-key: "생성된 secret key를 여기에 넣으세요"
             access-token-expiration: 900000
-#            15분
+            #            15분
             refresh-token-expiration: 3600000
 #           1시간
 exhibition:
     apiKey: f/yYy8svm3t0PGLHgpkhrFhC6SYzwr4ZDpzGe9/6CYxCWCmGcRCh0iAeIArWF6hZHJ8CS/7NMAhWRB/V6Yjl3A==
+
+    mail:
+        host: smtp.gmail.com
+        port: 587
+        username: hyeran092020@gmail.com
+        password: nurj gkyg akuo fefr
+        properties:
+            mail:
+                smtp:
+                    auth: true
+                    timeout: 5000
+                    starttls:
+                        enable: true

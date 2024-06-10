@@ -11,20 +11,22 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class MemberSignupDTO {
-    //    회원가입 요청
-
     private String email;
     private String password;
     private String passwordCheck;
     private String name;
+    private String verificationCode;
 
     @Builder
-    public MemberSignupDTO(String email, String password, String passwordCheck, String name){
-        this.email=email;
-        this.password=password;
-        this.passwordCheck=passwordCheck;
-        this.name=name;
+    public MemberSignupDTO(String email, String password, String passwordCheck, String name, String verificationCode){
+        this.email = email;
+        this.password = password;
+        this.passwordCheck = passwordCheck;
+        this.name = name;
+        this.verificationCode = verificationCode;
     }
+
+
 
     public static Member ofEntity(MemberSignupDTO dto){
         return Member.builder()
