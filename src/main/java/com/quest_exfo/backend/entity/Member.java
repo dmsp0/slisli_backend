@@ -31,17 +31,22 @@ public class Member {
     @Column
     private Role role;
 
+    @Column
+    private String profileImg;
+
     @Builder
-    public Member(String email, String password, String name, Role role){
+    public Member(String email, String password, String name, Role role, String profileImg){
         this.email=email;
         this.password=password;
         this.name=name;
         this.role=role;
+        this.profileImg=profileImg;
     }
 
-    public void update(String password, String name){
+    public void update(String password, String name, String profileImg){
         this.password=password;
         this.name=name;
+        this.profileImg=profileImg;
     }
 
 }

@@ -15,12 +15,14 @@ public class MemberUpdateDTO {
     private String newPassword; //변경할 비밀번호
     private String newPasswordCheck; //변경할 비밀번호 확인
     private String newName; //변경할 이름
+    private String newProfileImg;
 
     @Builder
-    public MemberUpdateDTO(String password, String newPassword, String newPasswordCheck, String newName) {
+    public MemberUpdateDTO(String password, String newPassword, String newPasswordCheck, String newName, String newProfileImg) {
         this.password = password;
         this.newPassword = newPassword;
         this.newPasswordCheck = newPasswordCheck;
         this.newName = newName;
+        this.newProfileImg=newProfileImg;
     }
 }
