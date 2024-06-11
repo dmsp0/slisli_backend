@@ -1,6 +1,7 @@
 package com.quest_exfo.backend.dto.request;
 
 import com.quest_exfo.backend.common.BoothCategory;
+import com.quest_exfo.backend.common.BoothType;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import lombok.Getter;
@@ -18,5 +19,5 @@ public class BoothDTO {
   private String imgPath;
   private Integer maxPeople;
   private String openerName;
-
+  private BoothType type;
 }

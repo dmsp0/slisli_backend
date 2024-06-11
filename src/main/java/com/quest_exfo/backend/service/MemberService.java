@@ -80,8 +80,8 @@ public class MemberService implements MemberServiceItf{
             );
 
             // 인증된 사용자 정보 가져오기
-            User user = (User) authentication.getPrincipal();
-            Member member = memberRepository.findByEmail(user.getUsername())
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            Member member = memberRepository.findByEmail(userDetails.getUsername())
                     .orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
 
             // JWT 엑세스 토큰 생성
@@ -125,7 +125,7 @@ public class MemberService implements MemberServiceItf{
         String encodePwd = passwordEncoder.encode(updateDTO.getNewPassword());
 
         //바꾼 비밀번호 , 이름 저장
-        member.update(encodePwd, updateDTO.getNewName());
+        member.update(encodePwd, updateDTO.getNewName(),updateDTO.getNewProfileImg());
 
         return MemberResponseDTO.fromEntity(member);
     }

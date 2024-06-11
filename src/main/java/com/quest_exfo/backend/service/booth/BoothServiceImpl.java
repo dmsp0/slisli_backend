@@ -33,6 +33,7 @@ public class BoothServiceImpl implements BoothService {
     booth.setEndTime(boothDTO.getEndTime());
     booth.setMaxPeople(boothDTO.getMaxPeople());
     booth.setOpenerName(boothDTO.getOpenerName());
+    booth.setType(boothDTO.getType());
 
     // UUID + 파일명으로 파일명 중복 처리
     String originalFileName = file.getOriginalFilename();

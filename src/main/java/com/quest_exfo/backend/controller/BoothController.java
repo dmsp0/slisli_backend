@@ -1,6 +1,7 @@
 package com.quest_exfo.backend.controller;
 
 import com.quest_exfo.backend.common.BoothCategory;
+import com.quest_exfo.backend.common.BoothType;
 import com.quest_exfo.backend.common.ResourceNotFoundException;
 import com.quest_exfo.backend.dto.request.BoothDTO;
 import com.quest_exfo.backend.entity.Booth;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("booths")
+@RequestMapping("api/booths")
 public class BoothController {
 
   @Autowired
@@ -41,14 +42,22 @@ public class BoothController {
   public Page<Booth> getBooths(
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "10") int size,
-      @RequestParam(required = false) BoothCategory category) {
+      @RequestParam(required = false) BoothCategory category,
+      @RequestParam(required = false) BoothType type) {
     Pageable pageable = PageRequest.of(page, size);
-    if (category != null) {
+    if (category != null && type != null) {
+      return boothRepository.findByCategoryAndTypeOrderByDateDesc(category, type, pageable);
+    } else if (category != null) {
       return boothRepository.findByCategoryOrderByDateDesc(category, pageable);
+    } else if (type != null) {
+      return boothRepository.findByTypeOrderByDateDesc(type, pageable);
     } else {
       return boothRepository.findAll(pageable);
     }
   }
+
+
+
 
   @GetMapping("/get/{id}")
   public Booth getBoothById(@PathVariable Long id) {
