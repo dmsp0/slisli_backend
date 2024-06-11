@@ -1,6 +1,7 @@
 package com.quest_exfo.backend.repository;
 
 import com.quest_exfo.backend.common.BoothCategory;
+import com.quest_exfo.backend.common.BoothType;
 import com.quest_exfo.backend.entity.Booth;
 import java.time.LocalDate;
 import java.util.List;
@@ -18,6 +19,8 @@ public interface BoothRepository extends JpaRepository<Booth, Long> {
   List<Integer> findVideoRoomIdsByDate(LocalDate date);
 
 
-  Page<Booth> findAllByOrderByDateDesc(Pageable pageable);
   Page<Booth> findByCategoryOrderByDateDesc(BoothCategory category, Pageable pageable);
+  Page<Booth> findByCategoryAndTypeOrderByDateDesc(BoothCategory category, BoothType type, Pageable pageable);
+  Page<Booth> findByTypeOrderByDateDesc(BoothType type, Pageable pageable);
+
 }
