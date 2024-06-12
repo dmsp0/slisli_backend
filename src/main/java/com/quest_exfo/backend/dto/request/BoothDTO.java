@@ -1,5 +1,6 @@
 package com.quest_exfo.backend.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.quest_exfo.backend.common.BoothCategory;
 import com.quest_exfo.backend.common.BoothType;
 import java.time.LocalDate;
@@ -20,4 +21,8 @@ public class BoothDTO {
   private Integer maxPeople;
   private String openerName;
   private BoothType type;
+  private Integer videoRoomId;
+
+  @JsonProperty("member_id")
+  private Long memberId;
 }
