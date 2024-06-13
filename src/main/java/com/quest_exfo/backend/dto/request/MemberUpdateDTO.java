@@ -10,17 +10,16 @@ import lombok.Setter;
 @NoArgsConstructor
 public class MemberUpdateDTO {
     //    정보 수정 요청
-
+    private String email;
     private String password; //현재 비밀번호
-    private String newPassword; //변경할 비밀번호
-    private String newPasswordCheck; //변경할 비밀번호 확인
-    private String newName; //변경할 이름
+    private String passwordCheck; //변경할 비밀번호 확인
+    private String name; //변경할 이름
 
     @Builder
-    public MemberUpdateDTO(String password, String newPassword, String newPasswordCheck, String newName) {
+    public MemberUpdateDTO(String email, String password, String passwordCheck, String name) {
+        this.email = email;
         this.password = password;
-        this.newPassword = newPassword;
-        this.newPasswordCheck = newPasswordCheck;
-        this.newName = newName;
+        this.passwordCheck = passwordCheck;
+        this.name = name;
     }
 }

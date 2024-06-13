@@ -1,6 +1,5 @@
 package com.quest_exfo.backend.entity;
 
-
 import com.quest_exfo.backend.common.BoothCategory;
 import com.quest_exfo.backend.common.BoothType;
 import jakarta.persistence.Entity;
@@ -11,7 +10,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 

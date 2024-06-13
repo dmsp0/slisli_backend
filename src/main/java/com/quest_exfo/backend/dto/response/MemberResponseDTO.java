@@ -14,11 +14,13 @@ public class MemberResponseDTO {
     //    비밀번호 포함하지 않아서 보안 up
     private String email;
     private String name;
+    private Long member_id;
 
     @Builder
-    public MemberResponseDTO(String email, String name){
+    public MemberResponseDTO(String email, String name,Long member_id){
         this.email=email;
         this.name=name;
+        this.member_id=member_id;
     }
 
     // Entity -> DTO
@@ -26,6 +28,7 @@ public class MemberResponseDTO {
         return MemberResponseDTO.builder()
                 .email(member.getEmail())
                 .name(member.getName())
+                .member_id(member.getMember_id())
                 .build();
     }
 

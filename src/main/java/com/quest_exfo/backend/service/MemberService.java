@@ -1,5 +1,7 @@
 package com.quest_exfo.backend.service;
 
+import com.quest_exfo.backend.common.ResourceNotFoundException;
+import com.quest_exfo.backend.dto.request.MemberDeleteDTO;
 import com.quest_exfo.backend.dto.request.MemberLoginDTO;
 import com.quest_exfo.backend.dto.request.MemberSignupDTO;
 import com.quest_exfo.backend.dto.request.MemberUpdateDTO;
@@ -13,16 +15,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Collections;
-import java.util.Optional;
 
 @Service
 public class MemberService implements MemberServiceItf{
@@ -80,8 +76,8 @@ public class MemberService implements MemberServiceItf{
             );
 
             // 인증된 사용자 정보 가져오기
-            User user = (User) authentication.getPrincipal();
-            Member member = memberRepository.findByEmail(user.getUsername())
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            Member member = memberRepository.findByEmail(userDetails.getUsername())
                     .orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
 
             // JWT 엑세스 토큰 생성
@@ -95,6 +91,7 @@ public class MemberService implements MemberServiceItf{
                     .refreshToken(refreshToken)
                     .email(member.getEmail())
                     .name(member.getName())
+                    .member_id(member.getMember_id())
                     .build();
         } catch (AuthenticationException e) {
             throw new RuntimeException("로그인에 실패했습니다. 이메일 또는 비밀번호를 확인해주세요.");
@@ -115,25 +112,41 @@ public class MemberService implements MemberServiceItf{
 
     @Override
     public MemberResponseDTO update(Member member, MemberUpdateDTO updateDTO) {
-        // 비밀번호 체크
-        if (!passwordEncoder.matches(updateDTO.getPassword(), member.getPassword())) {
-            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
-        }
-        //바꿀 비밀번호 한번더 확인
-        checkPwd(updateDTO.getNewPassword(), updateDTO.getNewPasswordCheck());
-        //바꿀 비밀번호 암호화
-        String encodePwd = passwordEncoder.encode(updateDTO.getNewPassword());
+        checkPwd(updateDTO.getPassword(), updateDTO.getPasswordCheck());
+        String encodePwd = passwordEncoder.encode(updateDTO.getPassword());
+        Member updateMember =  memberRepository.findByEmail(updateDTO.getEmail()).orElseThrow(
+                () -> new ResourceNotFoundException("Member", "Member Email", member.getEmail())
+        );
+        // 비밀번호 업데이트
+        updateMember.setPassword(encodePwd);
 
-        //바꾼 비밀번호 , 이름 저장
-        member.update(encodePwd, updateDTO.getNewName());
+        // 이름 업데이트
+        updateMember.setName(updateDTO.getName());
 
-        return MemberResponseDTO.fromEntity(member);
+        // 데이터베이스에 변경 사항 저장
+        memberRepository.save(updateMember);
+
+        // 업데이트된 회원 정보를 DTO로 변환하여 반환
+        return MemberResponseDTO.fromEntity(updateMember);
     }
 
     private void checkPwd(String password, String passwordCheck){
         if(!password.equals(passwordCheck)){
             throw new RuntimeException("패스워드가 일치하지 않습니다");
         }
+    }
+
+    // private void checkEncodePassword(String rawPassword, String encodedPassword) {
+    //     if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
+    //         throw new RuntimeException("패스워드 불일치");
+    //     }
+    // }
+    public MemberResponseDTO delete(Member member, MemberDeleteDTO deleteDTO) {
+        Member deleteMember = memberRepository.findById(deleteDTO.getMember_id()).orElseThrow(
+                ()-> new ResourceNotFoundException("Member", "Member ID", String.valueOf(member.getMember_id()))
+        );
+        memberRepository.delete(deleteMember);
+        return MemberResponseDTO.fromEntity(deleteMember);
     }
 
 }

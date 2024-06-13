@@ -29,7 +29,8 @@ public class Member {
     private String name;
 
     @Column
-    private Role role;
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.USER;
 
     @Builder
     public Member(String email, String password, String name, Role role){
@@ -39,8 +40,8 @@ public class Member {
         this.role=role;
     }
 
-    public void update(String password, String name){
-        this.password=password;
+    public void update(String encodedPassword, String name){
+        this.password=encodedPassword;
         this.name=name;
     }
 

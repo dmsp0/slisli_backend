@@ -13,5 +13,5 @@ public interface MemberServiceItf {
     MemberResponseDTO signup(MemberSignupDTO memberSignupDTO);
     MemberTokenDTO login(MemberLoginDTO memberLoginDTO);
     MemberResponseDTO check(Member member, String password);
-    MemberResponseDTO update(Member member, MemberUpdateDTO memberUpdateDTO);
+    MemberResponseDTO update(Member member, MemberUpdateDTO updateDto);
 }

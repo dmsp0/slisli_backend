@@ -18,7 +18,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -37,21 +41,23 @@ public class SecurityConfig{
             .csrf(CsrfConfigurer::disable)
             .cors(Customizer.withDefaults())
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers(
-                    "/api/exhibition/**",
-                    "/api/booths/**",
-                    "/uploads/**",
-                    "/api/member/login",
-                    "/api/member/signup",
-                    "/api/member/checkPassword",
-                    "/api/member/checkEmail",
-                    "/api/postTest",
-                    "/api/getTest"
-                ).permitAll()
-                // 마이페이지 등 user 권한이 있어야 접근 가능한 부분 추가
-                // 정보수정은 로그인 후에 접근하도록함
-                .requestMatchers("/api/member/update").hasRole("USER")
-                .anyRequest().authenticated()
+                    .requestMatchers(
+                            "/api/exhibition/**",
+                            "/api/booths/**",
+                        "/static/uploads/**",
+                            "/login",
+                            "/signup",
+                            "/checkPassword",
+                            "/checkEmail",
+                            "/postTest",
+                            "/getTest",
+                            "/auth/send-code",
+                            "/auth/verify-code",
+                            "/auth/checkEmail",
+                            "/update",
+                            "/delete"
+                    ).permitAll()
+                    .anyRequest().authenticated()
             )
             // 세션 관리 및 예외 처리, 필터 설정
             .sessionManagement(session -> session
@@ -63,7 +69,19 @@ public class SecurityConfig{
 
         return http.build();
     }
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
+        configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
+        configuration.setAllowCredentials(true);
 
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -73,5 +91,4 @@ public class SecurityConfig{
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-
 }
