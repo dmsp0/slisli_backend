@@ -25,6 +25,7 @@ public class MemberTokenDTO {
                 .email(customUserDetails.getUsername())
                 .name(customUserDetails.getName())
                 .token(token)
+                .member_id(customUserDetails.getMember_id())
                 .refreshToken(refreshToken)
                 .build();
     }
