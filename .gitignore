@@ -44,4 +44,4 @@ application-secret.yml
 **/src/main/resources/static/**
 
 
-src/main/resources/application-private.properties
+src/main/resources/application-private.yml
