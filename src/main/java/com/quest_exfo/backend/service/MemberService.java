@@ -95,6 +95,7 @@ public class MemberService implements MemberServiceItf{
                     .refreshToken(refreshToken)
                     .email(member.getEmail())
                     .name(member.getName())
+                    .member_id(member.getMember_id())
                     .build();
         } catch (AuthenticationException e) {
             throw new RuntimeException("로그인에 실패했습니다. 이메일 또는 비밀번호를 확인해주세요.");
