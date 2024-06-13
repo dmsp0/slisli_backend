@@ -9,6 +9,7 @@ import com.quest_exfo.backend.dto.response.MemberTokenDTO;
 import com.quest_exfo.backend.entity.Member;
 import com.quest_exfo.backend.service.MemberService;
 import com.quest_exfo.backend.service.MemberServiceItf;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +19,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-//@RequestMapping("")
+@RequestMapping("/api/member")
 @RequiredArgsConstructor
 public class MemberController {
 
@@ -63,10 +65,12 @@ public class MemberController {
 
     @PostMapping("/update")
     public ResponseEntity<MemberResponseDTO> update(@AuthenticationPrincipal Member member,
-                                                    @RequestBody MemberUpdateDTO memberUpdateDTO) {
-        MemberResponseDTO memberUpdate = memberServiceItf.update(member, memberUpdateDTO);
+        @RequestPart("member_profile") MemberUpdateDTO memberUpdateDTO,
+        @RequestPart("file") MultipartFile file) throws IOException {
+        MemberResponseDTO memberUpdate = memberServiceItf.update(member, memberUpdateDTO, file);
         return ResponseEntity.status(HttpStatus.OK).body(memberUpdate);
     }
+
 
     @PostMapping("/delete")
     public ResponseEntity<MemberResponseDTO> delete(@AuthenticationPrincipal Member member, @RequestBody MemberDeleteDTO memberDeleteDTO){

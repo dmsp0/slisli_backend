@@ -42,18 +42,21 @@ public class SecurityConfig{
             .cors(Customizer.withDefaults())
             .authorizeHttpRequests(authorize -> authorize
                     .requestMatchers(
-                            "/api/booths/**",
-                            "/login",
-                            "/signup",
-                            "/checkPassword",
-                            "/checkEmail",
-                            "/postTest",
-                            "/getTest",
-                            "/auth/send-code",
-                            "/auth/verify-code",
-                            "/auth/checkEmail",
-                            "/update",
-                            "/delete"
+                        //부스
+                        "/api/booths/**",
+                        //auth
+                        "api/auth/send-code",
+                        "api/auth/verify-code",
+                        //멤버
+                        "/api/member/login",
+                        "/api/member/signup",
+                        "/api/member/checkPassword",
+                        "/api/member/checkEmail",
+                        "/api/member/update",
+                        "/api/member/delete",
+                        //기타
+                        "/postTest",
+                        "/getTest"
                     ).permitAll()
                     .anyRequest().authenticated()
             )

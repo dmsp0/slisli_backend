@@ -32,7 +32,7 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
 
-    private String ProfileImgPath;
+    private String profileImgPath;
 
     @Builder
     public Member(String email, String password, String name, Role role){
