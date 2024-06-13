@@ -84,4 +84,9 @@ public class BoothServiceImpl implements BoothService {
 
     return videoRoomId; // 고유한 비디오룸 ID를 반환.
   }
+
+  @Override
+  public Booth findBoothById(Long boothId) {
+    return boothRepository.findById(boothId).orElse(null);
+  }
 }

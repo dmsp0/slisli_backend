@@ -42,9 +42,7 @@ public class SecurityConfig{
             .cors(Customizer.withDefaults())
             .authorizeHttpRequests(authorize -> authorize
                     .requestMatchers(
-                            "/api/exhibition/**",
                             "/api/booths/**",
-                        "/static/uploads/**",
                             "/login",
                             "/signup",
                             "/checkPassword",
@@ -72,6 +70,7 @@ public class SecurityConfig{
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOrigins(Arrays.asList("https://js3.jsflux.co.kr"));
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
