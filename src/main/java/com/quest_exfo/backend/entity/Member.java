@@ -29,24 +29,20 @@ public class Member {
     private String name;
 
     @Column
-    private Role role;
-
-    @Column
-    private String profileImg;
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.USER;
 
     @Builder
-    public Member(String email, String password, String name, Role role, String profileImg){
+    public Member(String email, String password, String name, Role role){
         this.email=email;
         this.password=password;
         this.name=name;
         this.role=role;
-        this.profileImg=profileImg;
     }
 
-    public void update(String password, String name, String profileImg){
-        this.password=password;
+    public void update(String encodedPassword, String name){
+        this.password=encodedPassword;
         this.name=name;
-        this.profileImg=profileImg;
     }
 
 }

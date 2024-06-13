@@ -23,7 +23,7 @@ security:
     jwt:
         token:
             secret-key: "생성된 secret key를 여기에 넣으세요"
-            access-token-expiration: 90000000
+            access-token-expiration: 36000000
             #            15분
             refresh-token-expiration: 36000000
 #           1시간
