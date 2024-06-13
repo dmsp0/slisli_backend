@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,7 +57,6 @@ public class BoothController {
     }
   }
 
-
   @GetMapping("/get/{id}")
   public BoothDTO getBoothById(@PathVariable Long id) {
     Booth booth = boothRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Booth not found"));
@@ -64,8 +64,19 @@ public class BoothController {
     return convertToDTO(booth);
   }
 
+  @GetMapping("/getRoomId/{boothId}")
+  public ResponseEntity<Integer> getRoomId(@PathVariable Long boothId) {
+    Booth booth = boothService.findBoothById(boothId);
+    if (booth != null && booth.getVideoRoomId() != null) {
+      return ResponseEntity.ok(booth.getVideoRoomId());
+    } else {
+      return ResponseEntity.notFound().build();
+    }
+  }
+
   private BoothDTO convertToDTO(Booth booth) {
     BoothDTO boothDTO = new BoothDTO();
+    boothDTO.setBoothId(booth.getBoothId());
     boothDTO.setTitle(booth.getTitle());
     boothDTO.setInfo(booth.getInfo());
     boothDTO.setCategory(booth.getCategory());
@@ -77,7 +88,7 @@ public class BoothController {
     boothDTO.setOpenerName(booth.getOpenerName());
     boothDTO.setType(booth.getType());
     boothDTO.setVideoRoomId(booth.getVideoRoomId());
-    boothDTO.setMemberId(booth.getMemberId()); // 추가된 부분
+    boothDTO.setMemberId(booth.getMemberId());
     System.out.println("Converted BoothDTO: " + boothDTO);
     return boothDTO;
   }

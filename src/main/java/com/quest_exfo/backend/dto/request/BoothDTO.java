@@ -11,6 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BoothDTO {
+  private Long boothId;
   private String title;
   private String info;
   private BoothCategory category;

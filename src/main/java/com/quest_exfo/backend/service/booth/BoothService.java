@@ -8,4 +8,5 @@ import java.io.IOException;
 
 public interface BoothService {
   Booth createBooth(BoothDTO boothDTO, MultipartFile file) throws IOException;
+  Booth findBoothById(Long boothId);
 }
