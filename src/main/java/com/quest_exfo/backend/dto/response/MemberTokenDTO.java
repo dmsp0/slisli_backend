@@ -17,6 +17,7 @@ public class MemberTokenDTO {
     private String name;
     private String token;
     private String refreshToken;
+    private Long member_id;
 
     // fromEntity 메서드를 @Builder 패턴을 사용하여 간결하게 변경
     public static MemberTokenDTO fromEntity(CustomUserDetails customUserDetails, String token, String refreshToken) {
