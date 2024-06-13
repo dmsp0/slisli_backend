@@ -53,9 +53,9 @@ public class SecurityConfig{
                             "/getTest",
                             "/auth/send-code",
                             "/auth/verify-code",
-                            "/auth/checkEmail"
+                            "/auth/checkEmail",
+                            "/update"
                     ).permitAll()
-                    .requestMatchers("/update").hasRole("USER")
                     .anyRequest().authenticated()
             )
             // 세션 관리 및 예외 처리, 필터 설정
