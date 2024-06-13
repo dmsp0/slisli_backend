@@ -54,7 +54,8 @@ public class SecurityConfig{
                             "/auth/send-code",
                             "/auth/verify-code",
                             "/auth/checkEmail",
-                            "/update"
+                            "/update",
+                            "/delete"
                     ).permitAll()
                     .anyRequest().authenticated()
             )

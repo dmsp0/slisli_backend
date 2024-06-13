@@ -1,16 +1,20 @@
 package com.quest_exfo.backend.controller;
 
+import com.quest_exfo.backend.dto.request.MemberDeleteDTO;
 import com.quest_exfo.backend.dto.request.MemberLoginDTO;
 import com.quest_exfo.backend.dto.request.MemberSignupDTO;
 import com.quest_exfo.backend.dto.request.MemberUpdateDTO;
 import com.quest_exfo.backend.dto.response.MemberResponseDTO;
 import com.quest_exfo.backend.dto.response.MemberTokenDTO;
 import com.quest_exfo.backend.entity.Member;
+import com.quest_exfo.backend.service.MemberService;
 import com.quest_exfo.backend.service.MemberServiceItf;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -21,6 +25,7 @@ import java.util.Map;
 public class MemberController {
 
     private final MemberServiceItf memberServiceItf;
+    private final MemberService memberService;
     @GetMapping("/test")
     public String testEndpoint() {
         return "Hello from /test endpoint!";
@@ -57,10 +62,16 @@ public class MemberController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<MemberResponseDTO> update(@AuthenticationPrincipal Member member, @RequestBody MemberUpdateDTO memberUpdateDTO){
-        MemberResponseDTO memberUpdate = memberServiceItf.update(member,memberUpdateDTO);
+    public ResponseEntity<MemberResponseDTO> update(@AuthenticationPrincipal Member member,
+                                                    @RequestBody MemberUpdateDTO memberUpdateDTO) {
+        MemberResponseDTO memberUpdate = memberServiceItf.update(member, memberUpdateDTO);
         return ResponseEntity.status(HttpStatus.OK).body(memberUpdate);
     }
 
+    @PostMapping("/delete")
+    public ResponseEntity<MemberResponseDTO> delete(@AuthenticationPrincipal Member member, @RequestBody MemberDeleteDTO memberDeleteDTO){
+        MemberResponseDTO deletedMember = memberService.delete(member, memberDeleteDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(deletedMember);
+    }
 
 }

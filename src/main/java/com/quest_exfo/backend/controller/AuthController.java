@@ -32,19 +32,25 @@ public class AuthController {
     private JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/refresh")
-    public MemberTokenDTO refresh(@RequestBody String refreshToken) {
-        if (!jwtTokenProvider.validateToken(refreshToken)) {
-            throw new RuntimeException("리프레시토큰 만료");
+    public MemberTokenDTO refresh(@RequestBody Map<String, String> request) {
+        String refreshToken = request.get("refreshToken");
+        System.out.println("Received refresh token: " + refreshToken);
+        if (refreshToken == null || !jwtTokenProvider.validateToken(refreshToken)) {
+            throw new RuntimeException("리프레시토큰 만료 또는 무효");
         }
 
         String username = jwtTokenProvider.getUsername(refreshToken);
+        System.out.println("Extracted username: " + username);
         CustomUserDetails userDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(username);
 
         String newAccessToken = jwtTokenProvider.createToken(userDetails.getUsername(), jwtTokenProvider.getRole(refreshToken));
         String newRefreshToken = jwtTokenProvider.generateRefreshToken(userDetails.getUsername());
+        System.out.println("Generated new access token: " + newAccessToken);
+        System.out.println("Generated new refresh token: " + newRefreshToken);
 
         return MemberTokenDTO.fromEntity(userDetails, newAccessToken, newRefreshToken);
     }
+
 
     @PostMapping("/send-code")
     public String sendVerificationCode(@RequestBody Map<String, String> request) {
