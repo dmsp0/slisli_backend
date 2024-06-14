@@ -7,6 +7,7 @@ import com.quest_exfo.backend.dto.request.MemberUpdateDTO;
 import com.quest_exfo.backend.dto.response.MemberResponseDTO;
 import com.quest_exfo.backend.dto.response.MemberTokenDTO;
 import com.quest_exfo.backend.entity.Member;
+import com.quest_exfo.backend.service.AuthService;
 import com.quest_exfo.backend.service.member.MemberServiceImpl;
 import com.quest_exfo.backend.service.member.MemberService;
 import java.io.IOException;
@@ -26,6 +27,8 @@ public class MemberController {
 
     private final MemberService memberServiceItf;
     private final MemberServiceImpl memberService;
+    private final AuthService authService;
+
     @GetMapping("/test")
     public String testEndpoint() {
         return "Hello from /test endpoint!";
@@ -63,8 +66,8 @@ public class MemberController {
 
     @PostMapping("/update")
     public ResponseEntity<MemberResponseDTO> update(@AuthenticationPrincipal Member member,
-        @RequestPart("member_profile") MemberUpdateDTO memberUpdateDTO,
-        @RequestPart("file") MultipartFile file) throws IOException {
+                                                    @RequestPart("member_profile") MemberUpdateDTO memberUpdateDTO,
+                                                    @RequestPart("file") MultipartFile file) throws IOException {
         MemberResponseDTO memberUpdate = memberServiceItf.update(member, memberUpdateDTO, file);
         return ResponseEntity.status(HttpStatus.OK).body(memberUpdate);
     }
@@ -75,5 +78,9 @@ public class MemberController {
         MemberResponseDTO deletedMember = memberService.delete(member, memberDeleteDTO);
         return ResponseEntity.status(HttpStatus.OK).body(deletedMember);
     }
-
+    @GetMapping("/auth/kakao/callback")
+    public ResponseEntity<MemberTokenDTO> kakaoCallback(@RequestParam("code") String code) {
+        MemberTokenDTO tokenDTO = authService.handleKakaoCallback(code);
+        return ResponseEntity.ok().body(tokenDTO);
+    }
 }
