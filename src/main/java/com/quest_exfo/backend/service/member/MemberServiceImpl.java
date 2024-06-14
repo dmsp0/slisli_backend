@@ -1,4 +1,4 @@
-package com.quest_exfo.backend.service;
+package com.quest_exfo.backend.service.member;
 
 import com.quest_exfo.backend.common.ResourceNotFoundException;
 import com.quest_exfo.backend.dto.request.MemberDeleteDTO;
@@ -10,6 +10,12 @@ import com.quest_exfo.backend.dto.response.MemberTokenDTO;
 import com.quest_exfo.backend.entity.Member;
 import com.quest_exfo.backend.repository.MemberRepository;
 import com.quest_exfo.backend.security.jwt.JwtTokenProvider;
+import java.io.IOException;
+import java.util.UUID;
+
+import com.quest_exfo.backend.service.CustomUserDetails;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,9 +25,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectResponse;
+
 
 @Service
-public class MemberService implements MemberServiceItf{
+public class MemberServiceImpl implements MemberService {
     //    메소드 정의 클래스
 //    수정 시 이 클래스만 수정해도 문제없도록
 
@@ -31,13 +42,20 @@ public class MemberService implements MemberServiceItf{
     private final JwtTokenProvider jwtTokenProvider;
     private final UserDetailsService userDetailsService;
 
-    public MemberService(PasswordEncoder passwordEncoder, MemberRepository memberRepository, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserDetailsService userDetailsService) {
+    public MemberServiceImpl(PasswordEncoder passwordEncoder, MemberRepository memberRepository, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserDetailsService userDetailsService) {
         this.passwordEncoder = passwordEncoder;
         this.memberRepository = memberRepository;
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
         this.userDetailsService = userDetailsService;
     }
+
+    @Autowired
+    private S3Client s3Client;
+
+    @Value("${cloud.aws.s3.bucket-name}")
+    private String bucketName;
+
 
     @Override
     public HttpStatus checkEmailDuplicate(String email){
@@ -111,7 +129,7 @@ public class MemberService implements MemberServiceItf{
 
 
     @Override
-    public MemberResponseDTO update(Member member, MemberUpdateDTO updateDTO) {
+    public MemberResponseDTO update(Member member, MemberUpdateDTO updateDTO, MultipartFile file) throws IOException {
         checkPwd(updateDTO.getPassword(), updateDTO.getPasswordCheck());
         String encodePwd = passwordEncoder.encode(updateDTO.getPassword());
         Member updateMember =  memberRepository.findByEmail(updateDTO.getEmail()).orElseThrow(
@@ -122,6 +140,25 @@ public class MemberService implements MemberServiceItf{
 
         // 이름 업데이트
         updateMember.setName(updateDTO.getName());
+
+        // UUID + 파일명으로 파일명 중복 처리
+        String originalFileName = file.getOriginalFilename();
+        String uniqueFileName = "member_profile_img/" + UUID.randomUUID().toString() + "_" + originalFileName;
+
+        // 파일을 S3에 업로드
+        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+            .bucket(bucketName)
+            .key(uniqueFileName)
+            .build();
+
+        PutObjectResponse putObjectResponse = s3Client.putObject(putObjectRequest, software.amazon.awssdk.core.sync.RequestBody.fromBytes(file.getBytes()));
+
+        if (putObjectResponse.sdkHttpResponse().isSuccessful()) {
+            String fileUrl = s3Client.utilities().getUrl(b -> b.bucket(bucketName).key(uniqueFileName)).toExternalForm();
+            updateMember.setProfileImgPath(fileUrl);
+        } else {
+            throw new IOException("Could not upload file to S3");
+        }
 
         // 데이터베이스에 변경 사항 저장
         memberRepository.save(updateMember);

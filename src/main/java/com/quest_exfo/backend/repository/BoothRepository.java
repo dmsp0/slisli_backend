@@ -5,6 +5,8 @@ import com.quest_exfo.backend.common.BoothType;
 import com.quest_exfo.backend.entity.Booth;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,5 +24,7 @@ public interface BoothRepository extends JpaRepository<Booth, Long> {
   Page<Booth> findByCategoryOrderByDateDesc(BoothCategory category, Pageable pageable);
   Page<Booth> findByCategoryAndTypeOrderByDateDesc(BoothCategory category, BoothType type, Pageable pageable);
   Page<Booth> findByTypeOrderByDateDesc(BoothType type, Pageable pageable);
+
+  Optional<Booth> findByBoothId(Long boothId);
 
 }
