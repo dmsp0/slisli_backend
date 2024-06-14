@@ -8,6 +8,9 @@ spring:
         url: jdbc:mysql://localhost:3306/slisli
         username: root
         password: tidlslsoRj902!
+    
+    profiles:
+      active: private
 
     jpa:
         hibernate:
