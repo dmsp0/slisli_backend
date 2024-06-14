@@ -42,20 +42,21 @@ public class SecurityConfig{
             .cors(Customizer.withDefaults())
             .authorizeHttpRequests(authorize -> authorize
                     .requestMatchers(
-                            "/api/exhibition/**",
-                            "/api/booths/**",
-                        "/static/uploads/**",
-                            "/login",
-                            "/signup",
-                            "/checkPassword",
-                            "/checkEmail",
-                            "/postTest",
-                            "/getTest",
-                            "/auth/send-code",
-                            "/auth/verify-code",
-                            "/auth/checkEmail",
-                            "/update",
-                            "/delete"
+                        //부스+좋아요
+                        "/api/booths/**",
+                        //auth
+                        "api/auth/send-code",
+                        "api/auth/verify-code",
+                        //멤버
+                        "/api/member/login",
+                        "/api/member/signup",
+                        "/api/member/checkPassword",
+                        "/api/member/checkEmail",
+                        "/api/member/update",
+                        "/api/member/delete",
+                        //기타
+                        "/postTest",
+                        "/getTest"
                     ).permitAll()
                     .anyRequest().authenticated()
             )
@@ -72,6 +73,7 @@ public class SecurityConfig{
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOrigins(Arrays.asList("https://js3.jsflux.co.kr"));
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
