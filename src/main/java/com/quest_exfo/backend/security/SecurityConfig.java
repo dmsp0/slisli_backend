@@ -45,8 +45,8 @@ public class SecurityConfig{
                         //부스+좋아요
                         "/api/booths/**",
                         //auth
-                        "api/auth/send-code",
-                        "api/auth/verify-code",
+                            "/api/mail/**",
+                            "/api/auth/**",
                         //멤버
                         "/api/member/login",
                         "/api/member/signup",

@@ -34,12 +34,19 @@ public class Member {
 
     private String profileImgPath;
 
+    @Column(nullable = true)
+    private String provider;
+
+    @Column(nullable = true)
+    private String providerId;
     @Builder
-    public Member(String email, String password, String name, Role role){
+    public Member(String email, String password, String name, String provider, String providerId, Role role){
         this.email=email;
         this.password=password;
         this.name=name;
         this.role=role;
+        this.provider = provider;
+        this.providerId = providerId;
     }
 
     public void update(String encodedPassword, String name){
