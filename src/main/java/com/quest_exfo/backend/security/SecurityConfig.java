@@ -52,7 +52,9 @@ public class SecurityConfig{
                         "/api/member/**",
                         //기타
                         "/postTest",
-                        "/getTest"
+                        "/getTest",
+                        //알림
+                            "/sse/subscribe/**"
                     ).permitAll()
                     .anyRequest().authenticated()
             )
@@ -72,7 +74,7 @@ public class SecurityConfig{
 //        configuration.setAllowedOrigins(Arrays.asList("https://js3.jsflux.co.kr"));
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
+        configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token","ACCESS_KEY","REFRESH_KEY"));
         configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
         configuration.setAllowCredentials(true);
 
