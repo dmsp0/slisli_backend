@@ -44,16 +44,12 @@ public class SecurityConfig{
                     .requestMatchers(
                         //부스+좋아요
                         "/api/booths/**",
+                        //mail
+                        "/api/mail/**",
                         //auth
-                            "/api/mail/**",
-                            "/api/auth/**",
+                        "/api/auth/**",
                         //멤버
-                        "/api/member/login",
-                        "/api/member/signup",
-                        "/api/member/checkPassword",
-                        "/api/member/checkEmail",
-                        "/api/member/update",
-                        "/api/member/delete",
+                        "/api/member/**",
                         //기타
                         "/postTest",
                         "/getTest"
