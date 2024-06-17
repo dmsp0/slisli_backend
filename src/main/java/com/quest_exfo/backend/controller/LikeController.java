@@ -4,6 +4,9 @@ import com.quest_exfo.backend.dto.request.LikeRequestDTO;
 import com.quest_exfo.backend.dto.response.LikeResponseDTO;
 import com.quest_exfo.backend.service.like.LikeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,8 +33,13 @@ public class LikeController {
     }
 
     @GetMapping("/likedList/{member_id}")
-    public ResponseEntity<List<LikeResponseDTO>> getLikedBoothByMember(@PathVariable Long member_id){
-        List<LikeResponseDTO> likedBooths = likeService.getLikedBoothByMember(member_id);
+    public ResponseEntity<Page<LikeResponseDTO>> getLikedBoothByMember(
+        @PathVariable Long member_id,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(required = false) String category) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<LikeResponseDTO> likedBooths = likeService.getLikedBoothByMember(member_id, category, pageable);
         return ResponseEntity.ok(likedBooths);
     }
 

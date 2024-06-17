@@ -27,4 +27,5 @@ public interface BoothRepository extends JpaRepository<Booth, Long> {
 
   Optional<Booth> findByBoothId(Long boothId);
 
+  Page<Booth> findByMemberIdOrderByDateDesc(Long userid, Pageable pageable);
 }
