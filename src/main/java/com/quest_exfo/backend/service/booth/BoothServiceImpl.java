@@ -6,6 +6,7 @@ import com.quest_exfo.backend.repository.BoothRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -42,23 +43,27 @@ public class BoothServiceImpl implements BoothService {
     booth.setOpenerName(boothDTO.getOpenerName());
     booth.setType(boothDTO.getType());
 
-    // UUID + 파일명으로 파일명 중복 처리
-    String originalFileName = file.getOriginalFilename();
-    String uniqueFileName = "booth_img/" + UUID.randomUUID().toString() + "_" + originalFileName;
+    try {
+      // UUID + 파일명으로 파일명 중복 처리
+      String originalFileName = file.getOriginalFilename();
+      String uniqueFileName = "booth_img/" + UUID.randomUUID().toString() + "_" + originalFileName;
 
-    // 파일을 S3에 업로드
-    PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-        .bucket(bucketName)
-        .key(uniqueFileName)
-        .build();
+      // 파일을 S3에 업로드
+      PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+          .bucket(bucketName)
+          .key(uniqueFileName)
+          .build();
 
-    PutObjectResponse putObjectResponse = s3Client.putObject(putObjectRequest, software.amazon.awssdk.core.sync.RequestBody.fromBytes(file.getBytes()));
+      PutObjectResponse putObjectResponse = s3Client.putObject(putObjectRequest, software.amazon.awssdk.core.sync.RequestBody.fromBytes(file.getBytes()));
 
-    if (putObjectResponse.sdkHttpResponse().isSuccessful()) {
-      String fileUrl = s3Client.utilities().getUrl(b -> b.bucket(bucketName).key(uniqueFileName)).toExternalForm();
-      booth.setImgPath(fileUrl);
-    } else {
-      throw new IOException("Could not upload file to S3");
+      if (putObjectResponse.sdkHttpResponse().isSuccessful()) {
+        String fileUrl = s3Client.utilities().getUrl(b -> b.bucket(bucketName).key(uniqueFileName)).toExternalForm();
+        booth.setImgPath(fileUrl);
+      } else {
+        throw new IOException("Could not upload file to S3");
+      }
+    } catch (MultipartException e) {
+      throw new IOException("File size exceeds the allowable limit", e);
     }
 
     // 비디오룸 ID생성

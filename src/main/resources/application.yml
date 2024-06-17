@@ -7,7 +7,7 @@ spring:
         driver-class-name: com.mysql.cj.jdbc.Driver
         url: jdbc:mysql://localhost:3306/slisli
         username: root
-        password: tidlslsoRj902!
+        password: my1234
     
     profiles:
       active: private
@@ -20,6 +20,12 @@ spring:
                 show_sql: true
                 format_sql: true
         database-platform: org.hibernate.dialect.MySQL8Dialect
+
+    servlet:
+        multipart:
+            max-file-size: 10MB
+            max-request-size: 10MB
+
 
 
 security:
@@ -70,3 +76,5 @@ kakao:
     redirect_uri: http://localhost:8080/api/auth/callback
     api_url: https://kapi.kakao.com
     token_url: https://kauth.kakao.com/oauth/token
+
+
