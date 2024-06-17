@@ -57,6 +57,29 @@ public class BoothController {
     }
   }
 
+
+  @GetMapping("/get_my/{userid}")
+  public Page<Booth> getMyBooths(
+      @PathVariable Long userid,
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "10") int size,
+      @RequestParam(required = false) BoothCategory category,
+      @RequestParam(required = false) BoothType type) {
+    Pageable pageable = PageRequest.of(page, size);
+    if (category != null && type != null) {
+      return boothRepository.findByCategoryAndTypeOrderByDateDesc(category, type, pageable);
+    } else if (category != null) {
+      return boothRepository.findByCategoryOrderByDateDesc(category, pageable);
+    } else if (type != null) {
+      return boothRepository.findByTypeOrderByDateDesc(type, pageable);
+    } else {
+      return boothRepository.findByMemberIdOrderByDateDesc(userid, pageable);
+    }
+  }
+
+
+
+
   @GetMapping("/get/{id}")
   public BoothDTO getBoothById(@PathVariable Long id) {
     Booth booth = boothRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Booth not found"));
