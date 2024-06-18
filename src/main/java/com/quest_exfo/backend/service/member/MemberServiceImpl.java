@@ -7,10 +7,13 @@ import com.quest_exfo.backend.dto.request.MemberSignupDTO;
 import com.quest_exfo.backend.dto.request.MemberUpdateDTO;
 import com.quest_exfo.backend.dto.response.MemberResponseDTO;
 import com.quest_exfo.backend.dto.response.MemberTokenDTO;
+import com.quest_exfo.backend.entity.Like;
 import com.quest_exfo.backend.entity.Member;
+import com.quest_exfo.backend.repository.LikeRepository;
 import com.quest_exfo.backend.repository.MemberRepository;
 import com.quest_exfo.backend.security.jwt.JwtTokenProvider;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 import com.quest_exfo.backend.service.CustomUserDetails;
@@ -56,6 +59,8 @@ public class MemberServiceImpl implements MemberService {
     @Value("${cloud.aws.s3.bucket-name}")
     private String bucketName;
 
+    @Autowired
+    private LikeRepository likeRepository;
 
     @Override
     public HttpStatus checkEmailDuplicate(String email){
@@ -183,7 +188,14 @@ public class MemberServiceImpl implements MemberService {
         Member deleteMember = memberRepository.findById(deleteDTO.getMember_id()).orElseThrow(
                 ()-> new ResourceNotFoundException("Member", "Member ID", String.valueOf(member.getMember_id()))
         );
+        // 해당 회원을 참조하는 Like 엔티티들을 모두 삭제
+        List<Like> likesToDelete = likeRepository.findByMember(deleteMember);
+        likeRepository.deleteAll(likesToDelete);
+
+        // 회원 삭제
         memberRepository.delete(deleteMember);
+
+        // 삭제된 회원 정보를 DTO로 반환
         return MemberResponseDTO.fromEntity(deleteMember);
     }
 
