@@ -23,7 +23,5 @@ public class BoothDTO {
   private String openerName;
   private BoothType type;
   private Integer videoRoomId;
-
-  @JsonProperty("member_id")
   private Long memberId;
 }

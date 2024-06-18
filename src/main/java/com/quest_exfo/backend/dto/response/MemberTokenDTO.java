@@ -18,16 +18,17 @@ public class MemberTokenDTO {
     private String token;
     private String refreshToken;
     private Long member_id;
+    private String profileImgPath; // 프로필 이미지 경로 추가
 
     // fromEntity 메서드를 @Builder 패턴을 사용하여 간결하게 변경
     public static MemberTokenDTO fromEntity(CustomUserDetails customUserDetails, String token, String refreshToken) {
         return MemberTokenDTO.builder()
-                .email(customUserDetails.getUsername())
-                .name(customUserDetails.getName())
-                .token(token)
-                .member_id(customUserDetails.getMember_id())
-                .refreshToken(refreshToken)
-                .build();
+            .email(customUserDetails.getUsername())
+            .name(customUserDetails.getName())
+            .token(token)
+            .member_id(customUserDetails.getMember_id())
+            .refreshToken(refreshToken)
+            .profileImgPath(customUserDetails.getProfileImgPath()) // 프로필 이미지 경로 추가
+            .build();
     }
-
 }
