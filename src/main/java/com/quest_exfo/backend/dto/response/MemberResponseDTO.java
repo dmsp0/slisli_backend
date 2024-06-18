@@ -5,31 +5,29 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 @Getter
 @Setter
 @NoArgsConstructor
 public class MemberResponseDTO {
-    //    요청 -> 응답용DTO
-    //    비밀번호 포함하지 않아서 보안 up
     private String email;
     private String name;
     private Long member_id;
+    private String profileImgPath; // 추가된 필드
 
     @Builder
-    public MemberResponseDTO(String email, String name,Long member_id){
-        this.email=email;
-        this.name=name;
-        this.member_id=member_id;
+    public MemberResponseDTO(String email, String name, Long member_id, String profileImgPath) {
+        this.email = email;
+        this.name = name;
+        this.member_id = member_id;
+        this.profileImgPath = profileImgPath;
     }
 
-    // Entity -> DTO
     public static MemberResponseDTO fromEntity(Member member) {
         return MemberResponseDTO.builder()
                 .email(member.getEmail())
                 .name(member.getName())
                 .member_id(member.getMember_id())
+                .profileImgPath(member.getProfileImgPath()) // 추가된 필드 매핑
                 .build();
     }
-
 }

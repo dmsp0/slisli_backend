@@ -8,6 +8,11 @@ spring:
         url: jdbc:mysql://localhost:3306/slisli
         username: root
         password: my1234
+        hikari:
+            connection-timeout: 30000     # 30초
+            maximum-pool-size: 30         # 예: 애플리케이션의 예상 최대 동시 사용자 수에 따라 조정
+            max-lifetime: 1800000         # 30분 (밀리초 단위)
+            idle-timeout: 600000           # 10분 (밀리초 단위)
     
     profiles:
       active: private
