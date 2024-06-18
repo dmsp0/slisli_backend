@@ -10,13 +10,15 @@ public class CustomUserDetails implements UserDetails {
     private String name;
     private String password;
     private Long member_id;
+    private String profileImgPath;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public CustomUserDetails(String email, String name, String password, Long member_id, Collection<? extends GrantedAuthority> authorities) {
+    public CustomUserDetails(String email, String name, String password, Long member_id, String profileImgPath,Collection<? extends GrantedAuthority> authorities) {
         this.email = email;
         this.name = name;
         this.password = password;
         this.member_id = member_id;
+        this.profileImgPath = profileImgPath;
         this.authorities = authorities;
     }
 
@@ -26,6 +28,10 @@ public class CustomUserDetails implements UserDetails {
 
     public Long getMember_id() {
         return member_id;
+    }
+
+    public String getProfileImgPath() {
+        return profileImgPath;
     }
 
     @Override

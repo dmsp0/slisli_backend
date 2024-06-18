@@ -1,5 +1,6 @@
 package com.quest_exfo.backend.service.booth;
 
+import com.quest_exfo.backend.common.BoothCategory;
 import com.quest_exfo.backend.dto.request.BoothDTO;
 import com.quest_exfo.backend.entity.Booth;
 import com.quest_exfo.backend.repository.BoothRepository;
@@ -15,8 +16,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class BoothServiceImpl implements BoothService {
@@ -42,6 +47,7 @@ public class BoothServiceImpl implements BoothService {
     booth.setMaxPeople(boothDTO.getMaxPeople());
     booth.setOpenerName(boothDTO.getOpenerName());
     booth.setType(boothDTO.getType());
+    booth.setMemberId(boothDTO.getMemberId());
 
     try {
       // UUID + 파일명으로 파일명 중복 처리
@@ -73,25 +79,94 @@ public class BoothServiceImpl implements BoothService {
     return boothRepository.save(booth);
   }
 
+  @Override
+  public Booth updateBooth(Long boothId, BoothDTO boothDTO, MultipartFile file) throws IOException {
+    Booth booth = findBoothById(boothId);
+    if (booth == null) {
+      throw new IllegalArgumentException("부스아이디 : " + boothId + " 수정 실패");
+    }
+
+    booth.setTitle(boothDTO.getTitle());
+    booth.setInfo(boothDTO.getInfo());
+    booth.setCategory(boothDTO.getCategory());
+    booth.setDate(boothDTO.getDate());
+    booth.setStartTime(boothDTO.getStartTime());
+    booth.setEndTime(boothDTO.getEndTime());
+    booth.setMaxPeople(boothDTO.getMaxPeople());
+    booth.setOpenerName(boothDTO.getOpenerName());
+    booth.setType(boothDTO.getType());
+
+    if (file != null && !file.isEmpty()) {
+      // 기존 파일 삭제
+      if (booth.getImgPath() != null) {
+        String existingFileKey = booth.getImgPath().substring(booth.getImgPath().indexOf("booth_img/"));
+        System.out.println("Existing file key: " + existingFileKey); // 디버그 출력
+        DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+            .bucket(bucketName)
+            .key(existingFileKey)
+            .build();
+        s3Client.deleteObject(deleteObjectRequest);
+      }
+
+      // 새로운 파일 업로드
+      try {
+        String originalFileName = file.getOriginalFilename();
+        String uniqueFileName = "booth_img/" + UUID.randomUUID().toString() + "_" + originalFileName;
+
+        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+            .bucket(bucketName)
+            .key(uniqueFileName)
+            .build();
+
+        PutObjectResponse putObjectResponse = s3Client.putObject(putObjectRequest, software.amazon.awssdk.core.sync.RequestBody.fromBytes(file.getBytes()));
+
+        if (putObjectResponse.sdkHttpResponse().isSuccessful()) {
+          String fileUrl = s3Client.utilities().getUrl(b -> b.bucket(bucketName).key(uniqueFileName)).toExternalForm();
+          booth.setImgPath(fileUrl);
+        } else {
+          throw new IOException("Could not upload file to S3");
+        }
+      } catch (MultipartException e) {
+        throw new IOException("File size exceeds the allowable limit", e);
+      }
+    }
+
+    return boothRepository.save(booth);
+  }
+
+
+  @Override
+  public Page<Booth> getBoothsByMemberAndCategory(Long memberId, String category, int page, int size) {
+    Pageable pageable = PageRequest.of(page, size);
+    if (category.isEmpty()) {
+      return boothRepository.findByMemberIdOrderByDateDesc(memberId, pageable);
+    } else {
+      return boothRepository.findByMemberIdAndCategoryOrderByDateDesc(memberId, BoothCategory.valueOf(category), pageable);
+    }
+  }
+
   private int generateUniqueVideoRoomId(LocalDate date) {
-    // 주어진 날짜에 이미 사용된 비디오룸 ID 목록을 조회.
     List<Integer> usedIds = boothRepository.findVideoRoomIdsByDate(date);
-
-    // 랜덤 숫자를 생성하기 위한 Random 인스턴스를 생성.
     Random random = new Random();
-
     int videoRoomId;
-
-    // 조건: 30000~ 39999까지 랜덤으로 가진다. 같은날에는 같은 비디오룸 아이디를 가질수없다.
     do {
-      videoRoomId = 30000 + random.nextInt(10000); // 30000 ~ 39999 범위의 숫자를 생성.
-    } while (usedIds.contains(videoRoomId)); // 생성된 ID가 이미 사용된 경우 반복.
-
-    return videoRoomId; // 고유한 비디오룸 ID를 반환.
+      videoRoomId = 30000 + random.nextInt(10000);
+    } while (usedIds.contains(videoRoomId));
+    return videoRoomId;
   }
 
   @Override
   public Booth findBoothById(Long boothId) {
     return boothRepository.findById(boothId).orElse(null);
+  }
+
+  @Override
+  public void deleteByBoothId(Long boothId) {
+    Booth booth = findBoothById(boothId);
+    if (booth != null) {
+      boothRepository.delete(booth);
+    } else {
+      throw new IllegalArgumentException("부스아이디 : " + boothId + " 삭제 실패");
+    }
   }
 }

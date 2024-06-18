@@ -110,7 +110,8 @@ public class MemberServiceImpl implements MemberService {
                     .email(member.getEmail())
                     .name(member.getName())
                     .member_id(member.getMember_id())
-                    .build();
+                    .profileImgPath(member.getProfileImgPath()) // 프로필 이미지 경로 추가
+                .build();
         } catch (AuthenticationException e) {
             throw new RuntimeException("로그인에 실패했습니다. 이메일 또는 비밀번호를 확인해주세요.");
         }

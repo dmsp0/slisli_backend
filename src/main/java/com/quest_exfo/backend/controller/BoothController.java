@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,44 +42,35 @@ public class BoothController {
 
   @GetMapping("/get")
   public Page<Booth> getBooths(
-          @RequestParam(defaultValue = "0") int page,
-          @RequestParam(defaultValue = "10") int size,
-          @RequestParam(required = false) BoothCategory category,
-          @RequestParam(required = false) BoothType type) {
-    Pageable pageable = PageRequest.of(page, size);
-    if (category != null && type != null) {
-      return boothRepository.findByCategoryAndTypeOrderByDateDesc(category, type, pageable);
-    } else if (category != null) {
-      return boothRepository.findByCategoryOrderByDateDesc(category, pageable);
-    } else if (type != null) {
-      return boothRepository.findByTypeOrderByDateDesc(type, pageable);
-    } else {
-      return boothRepository.findAll(pageable);
-    }
-  }
-
-
-  @GetMapping("/get_my/{userid}")
-  public Page<Booth> getMyBooths(
-      @PathVariable Long userid,
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "10") int size,
       @RequestParam(required = false) BoothCategory category,
-      @RequestParam(required = false) BoothType type) {
+      @RequestParam(required = false) BoothType type,
+      @RequestParam(required = false) String search) {
     Pageable pageable = PageRequest.of(page, size);
+
     if (category != null && type != null) {
+      if (search != null && !search.isEmpty()) {
+        return boothRepository.findByCategoryAndTypeAndSearch(category, type, search, pageable);
+      }
       return boothRepository.findByCategoryAndTypeOrderByDateDesc(category, type, pageable);
     } else if (category != null) {
+      if (search != null && !search.isEmpty()) {
+        return boothRepository.findByCategoryAndSearch(category, search, pageable);
+      }
       return boothRepository.findByCategoryOrderByDateDesc(category, pageable);
     } else if (type != null) {
+      if (search != null && !search.isEmpty()) {
+        return boothRepository.findByTypeAndSearch(type, search, pageable);
+      }
       return boothRepository.findByTypeOrderByDateDesc(type, pageable);
     } else {
-      return boothRepository.findByMemberIdOrderByDateDesc(userid, pageable);
+      if (search != null && !search.isEmpty()) {
+        return boothRepository.findBySearch(search, pageable);
+      }
+      return boothRepository.findAll(pageable);
     }
   }
-
-
-
 
   @GetMapping("/get/{id}")
   public BoothDTO getBoothById(@PathVariable Long id) {
@@ -115,4 +107,26 @@ public class BoothController {
     System.out.println("Converted BoothDTO: " + boothDTO);
     return boothDTO;
   }
-}
+
+  @DeleteMapping("delete/{boothId}")
+  public void deleteBoothByBoothId(@PathVariable Long boothId) {
+    boothService.deleteByBoothId(boothId);
+  }
+
+  @PostMapping("/update/{boothId}")
+  public Booth updateBooth(
+      @PathVariable Long boothId,
+      @RequestPart("booth") BoothDTO boothDTO,
+      @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
+    return boothService.updateBooth(boothId, boothDTO, file);
+  }
+
+  @GetMapping("/get_my/{memberId}")
+  public Page<Booth> getBoothsByMemberAndCategory(
+      @PathVariable Long memberId,
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "10") int size,
+      @RequestParam(defaultValue = "") String category) {
+    return boothService.getBoothsByMemberAndCategory(memberId, category, page, size);
+  }
+  }
