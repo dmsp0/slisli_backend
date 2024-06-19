@@ -7,7 +7,7 @@ spring:
         driver-class-name: com.mysql.cj.jdbc.Driver
         url: jdbc:mysql://localhost:3306/slisli
         username: root
-        password: my1234
+        password: tidlslsoRj902!
     
     profiles:
       active: private

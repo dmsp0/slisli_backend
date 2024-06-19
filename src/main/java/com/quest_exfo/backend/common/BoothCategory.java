@@ -6,5 +6,4 @@ public enum BoothCategory {
   FOOD_BEVERAGE, //("식/음료"),
   LIFESTYLE_HEALTH,  //("생활/건강"),
   CULTURE_ART //("문화/예술");
-
 }
