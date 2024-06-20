@@ -6,6 +6,7 @@ spring:
     datasource:
         driver-class-name: com.mysql.cj.jdbc.Driver
         url: jdbc:mysql://localhost:3306/slisli
+#        url: jdbc:mysql://13.125.219.120:3306/slisli
         username: root
         password: my1234
         hikari:
@@ -79,6 +80,7 @@ exhibition:
 kakao:
     client_id: 735bc3ec38cfd843679faa1343fb0f94
     redirect_uri: http://localhost:8080/api/auth/callback
+#    redirect_uri: https://js3.jsflux.co.kr/api/auth/callback
     api_url: https://kapi.kakao.com
     token_url: https://kauth.kakao.com/oauth/token
 

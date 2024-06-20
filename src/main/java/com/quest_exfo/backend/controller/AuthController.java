@@ -79,6 +79,14 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+
+//    @GetMapping("/kakao")
+//    public RedirectView loginPage() {
+//        String location = "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=" + clientId + "&redirect_uri=" + redirectUri;
+//        log.info("Redirecting to: {}", location);
+//        return new RedirectView(location);
+//    }
+
     @GetMapping("/callback")
     public RedirectView callback(@RequestParam("code") String code) {
         log.info("Callback with code: {}", code);
@@ -100,11 +108,13 @@ public class AuthController {
             String jwtToken = jwtTokenProvider.createToken(user.getEmail(), user.getRole().name());
             String refreshToken = jwtTokenProvider.generateRefreshToken(user.getEmail());
 
+//            String redirectUrl = String.format("https://js3.jsflux.co.kr?token=%s&refreshToken=%s&email=%s&name=%s",
             String redirectUrl = String.format("http://localhost:3000?token=%s&refreshToken=%s&email=%s&name=%s",
-                    URLEncoder.encode(jwtToken, StandardCharsets.UTF_8.toString()),
-                    URLEncoder.encode(refreshToken, StandardCharsets.UTF_8.toString()),
-                    URLEncoder.encode(user.getEmail(), StandardCharsets.UTF_8.toString()),
-                    URLEncoder.encode(user.getName(), StandardCharsets.UTF_8.toString()));
+                URLEncoder.encode(jwtToken, StandardCharsets.UTF_8.toString()),
+                URLEncoder.encode(refreshToken, StandardCharsets.UTF_8.toString()),
+                URLEncoder.encode(user.getEmail(), StandardCharsets.UTF_8.toString()),
+                URLEncoder.encode(user.getEmail(), StandardCharsets.UTF_8.toString()),
+                URLEncoder.encode(user.getName(), StandardCharsets.UTF_8.toString()));
 
             return new RedirectView(redirectUrl);
         } catch (Exception e) {

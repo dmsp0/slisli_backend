@@ -8,6 +8,8 @@ import com.quest_exfo.backend.entity.Booth;
 import com.quest_exfo.backend.repository.BoothRepository;
 import com.quest_exfo.backend.service.booth.BoothService;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -129,4 +131,16 @@ public class BoothController {
       @RequestParam(defaultValue = "") String category) {
     return boothService.getBoothsByMemberAndCategory(memberId, category, page, size);
   }
+
+  @GetMapping("/top-liked-by-category")
+  public Map<String, Booth> getTopLikedBoothsByCategory() {
+    LocalDate currentDate = LocalDate.now();
+    return boothService.getTopLikedBoothsByCategoryAndDate(currentDate);
+  }
+
+  @GetMapping("/latest-by-category")
+  public Map<String, Booth> getLatestBoothsByCategory() {
+    return boothService.getLatestBoothsByCategory();
+  }
+
   }
