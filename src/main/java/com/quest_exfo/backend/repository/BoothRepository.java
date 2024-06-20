@@ -40,4 +40,6 @@ public interface BoothRepository extends JpaRepository<Booth, Long> {
   // 마이부스를 위한 메소드
   Page<Booth> findByMemberIdAndCategoryOrderByDateDesc(Long memberId, BoothCategory category, Pageable pageable);
   Page<Booth> findByMemberIdOrderByDateDesc(Long memberId, Pageable pageable);
+
+  Optional<Booth> findTopByCategoryOrderByBoothIdDesc(BoothCategory category);
 }

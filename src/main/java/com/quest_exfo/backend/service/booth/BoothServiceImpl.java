@@ -4,6 +4,10 @@ import com.quest_exfo.backend.common.BoothCategory;
 import com.quest_exfo.backend.dto.request.BoothDTO;
 import com.quest_exfo.backend.entity.Booth;
 import com.quest_exfo.backend.repository.BoothRepository;
+import com.quest_exfo.backend.repository.LikeRepository;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -28,6 +32,9 @@ public class BoothServiceImpl implements BoothService {
 
   @Autowired
   private BoothRepository boothRepository;
+
+  @Autowired
+  private LikeRepository likeRepository;
 
   @Autowired
   private S3Client s3Client;
@@ -169,4 +176,34 @@ public class BoothServiceImpl implements BoothService {
       throw new IllegalArgumentException("부스아이디 : " + boothId + " 삭제 실패");
     }
   }
-}
+
+  @Override
+  public Map<String, Booth> getTopLikedBoothsByCategoryAndDate(LocalDate date) {
+    List<Object[]> results = likeRepository.findTopLikedBoothsByCategoryAndDate(date);
+
+    // 디버깅 로그 추가
+    for (Object[] result : results) {
+      Booth booth = (Booth) result[0];
+      Long likeCount = (Long) result[1];
+      System.out.println("Category: " + booth.getCategory() + ", Booth: " + booth.getTitle() + ", Likes: " + likeCount);
+    }
+
+    Map<String, Booth> topLikedBoothsByCategory = results.stream()
+        .collect(Collectors.groupingBy(
+            result -> ((Booth) result[0]).getCategory().toString(),
+            Collectors.collectingAndThen(Collectors.toList(), list -> (Booth) list.get(0)[0])
+        ));
+
+    System.out.println("Top liked booths by category: " + topLikedBoothsByCategory);
+    return topLikedBoothsByCategory;
+  }
+
+  @Override
+  public Map<String, Booth> getLatestBoothsByCategory() {
+    Map<String, Booth> latestBooths = new HashMap<>();
+    for (BoothCategory category : BoothCategory.values()) {
+      boothRepository.findTopByCategoryOrderByBoothIdDesc(category).ifPresent(booth -> latestBooths.put(category.name(), booth));
+    }
+    return latestBooths;
+  }
+  }
