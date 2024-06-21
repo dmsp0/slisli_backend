@@ -206,4 +206,14 @@ public class BoothServiceImpl implements BoothService {
     }
     return latestBooths;
   }
+
+  @Override
+  public long getTotalBoothsCount() {
+    return boothRepository.count();
+  }
+
+  @Override
+  public long getUniqueBoothMembersCount() {
+    return boothRepository.findAll().stream().map(Booth::getMemberId).distinct().count();
+  }
   }

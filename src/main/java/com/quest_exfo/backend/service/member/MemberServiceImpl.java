@@ -199,4 +199,8 @@ public class MemberServiceImpl implements MemberService {
         return MemberResponseDTO.fromEntity(deleteMember);
     }
 
+    @Override
+    public long getTotalMembersCount() {
+        return memberRepository.count();
+    }
 }

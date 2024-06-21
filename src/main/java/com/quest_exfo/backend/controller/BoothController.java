@@ -6,9 +6,12 @@ import com.quest_exfo.backend.common.ResourceNotFoundException;
 import com.quest_exfo.backend.dto.request.BoothDTO;
 import com.quest_exfo.backend.entity.Booth;
 import com.quest_exfo.backend.repository.BoothRepository;
+import com.quest_exfo.backend.repository.MemberRepository;
 import com.quest_exfo.backend.service.booth.BoothService;
+import com.quest_exfo.backend.service.member.MemberService;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,6 +37,9 @@ public class BoothController {
 
   @Autowired
   private BoothRepository boothRepository;
+
+  @Autowired
+  private MemberService memberService;
 
   @PostMapping("/insert")
   public Booth createBooth(
@@ -141,6 +147,16 @@ public class BoothController {
   @GetMapping("/latest-by-category")
   public Map<String, Booth> getLatestBoothsByCategory() {
     return boothService.getLatestBoothsByCategory();
+  }
+
+  @GetMapping("/counting")
+  public Map<String, Long> getMainPageCount() {
+    Map<String, Long> count = new HashMap<>();
+    count.put("totalBooths", boothService.getTotalBoothsCount());
+    count.put("uniqueBoothMembers", boothService.getUniqueBoothMembersCount());
+    count.put("totalMembers", memberService.getTotalMembersCount());
+    System.out.println(count.toString());
+    return count;
   }
 
   }
