@@ -17,4 +17,6 @@ public interface MemberService {
     MemberResponseDTO check(Member member, String password);
     MemberResponseDTO update(Member member, MemberUpdateDTO updateDto,MultipartFile file)
         throws IOException;
+
+    long getTotalMembersCount();
 }

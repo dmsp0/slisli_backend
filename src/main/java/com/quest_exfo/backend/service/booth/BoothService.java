@@ -23,4 +23,8 @@ public interface BoothService {
   Map<String, Booth> getTopLikedBoothsByCategoryAndDate(LocalDate date);
 
   Map<String, Booth> getLatestBoothsByCategory();
+
+  long getTotalBoothsCount();
+
+  long getUniqueBoothMembersCount();
 }
