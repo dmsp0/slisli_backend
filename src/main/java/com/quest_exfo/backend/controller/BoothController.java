@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -40,6 +41,9 @@ public class BoothController {
 
   @Autowired
   private MemberService memberService;
+
+  @Autowired
+  private Long hostId;
 
   @PostMapping("/insert")
   public Booth createBooth(
@@ -158,5 +162,19 @@ public class BoothController {
     System.out.println(count.toString());
     return count;
   }
+
+    @PostMapping("/set")
+  public void setHostId(@RequestBody Map<String, Long> hostData) {
+    Long hostId = hostData.get("hostId");
+    System.out.println("Received hostId: " + hostId);
+    this.hostId = hostId;
+    System.out.println("hostId가 저장되었습니다." + hostId);
+  }
+
+  @GetMapping("/gget")
+  public Long  getHostId() {
+    System.out.println("hostId가 반환됩니다.." + this.hostId);
+    return this.hostId;
+  } 
 
   }
