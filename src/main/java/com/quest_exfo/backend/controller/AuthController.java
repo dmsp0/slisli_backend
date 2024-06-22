@@ -69,23 +69,11 @@ public class AuthController {
     }
 
     @GetMapping("/kakao")
-    public ResponseEntity<Map<String, String>> loginPage() {
+    public RedirectView loginPage() {
         String location = "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=" + clientId + "&redirect_uri=" + redirectUri;
         log.info("Redirecting to: {}", location);
-
-        Map<String, String> response = new HashMap<>();
-        response.put("url", location);
-
-        return ResponseEntity.ok(response);
+        return new RedirectView(location);
     }
-
-
-//    @GetMapping("/kakao")
-//    public RedirectView loginPage() {
-//        String location = "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=" + clientId + "&redirect_uri=" + redirectUri;
-//        log.info("Redirecting to: {}", location);
-//        return new RedirectView(location);
-//    }
 
     @GetMapping("/callback")
     public RedirectView callback(@RequestParam("code") String code) {
