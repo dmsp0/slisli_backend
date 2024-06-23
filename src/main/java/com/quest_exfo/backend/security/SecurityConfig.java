@@ -54,7 +54,10 @@ public class SecurityConfig{
                         "/postTest",
                         "/getTest",
                         //알림
-                            "/sse/subscribe/**"
+                        "/sse/subscribe/**",
+                        //채팅
+                        "/api/chat/save"
+                        
                     ).permitAll()
                     .anyRequest().authenticated()
             )
