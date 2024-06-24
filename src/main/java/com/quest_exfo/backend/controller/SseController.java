@@ -32,7 +32,7 @@ public class SseController {
     public SseEmitter subscribe(@PathVariable Long memberId) {
         SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
 
-        // Find the member
+        // 회원 찾기
         Optional<Member> memberOptional = memberRepository.findById(memberId);
         if (!memberOptional.isPresent()) {
             emitter.completeWithError(new Exception("Member not found"));
@@ -41,7 +41,7 @@ public class SseController {
 
         Member member = memberOptional.get();
 
-        // Find liked booths
+        // 회원이 좋아요를 누른 부스 찾기
         List<Like> likes = likeRepository.findByMember(member);
 
         new Thread(() -> {
@@ -52,7 +52,7 @@ public class SseController {
                         Booth booth = like.getBooth();
                         if (booth.getDate().equals(LocalDate.now())) {
                             long minutesUntilStart = Duration.between(now, booth.getStartTime()).toMinutes();
-                            if (minutesUntilStart <= 60 && minutesUntilStart > 0) {
+                            if (minutesUntilStart <= 30 && minutesUntilStart > 0) {
                                 // Send JSON formatted data
                                 String eventData = "{\"boothTitle\": \"" + booth.getTitle() + "\", \"minutesUntilStart\": " + minutesUntilStart + "}";
 
@@ -61,7 +61,7 @@ public class SseController {
                             }
                         }
                     }
-                    Thread.sleep(60000); // 1분
+                    Thread.sleep(300000); // 5분
                 }
             } catch (Exception e) {
                 emitter.completeWithError(e);
