@@ -1,7 +1,64 @@
-spring:
-    application:
-        name : backend
-
 # 서버 설정
 server:
-    port: 7777
+    port: 8080
+
+spring:
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/slisli
+#        url: jdbc:mysql://13.125.219.120:3306/slisli
+        username: root
+        password: my1234
+        hikari:
+            connection-timeout: 30000     # 30초
+            maximum-pool-size: 30         # 예: 애플리케이션의 예상 최대 동시 사용자 수에 따라 조정
+            max-lifetime: 1800000         # 30분 (밀리초 단위)
+            idle-timeout: 600000           # 10분 (밀리초 단위)
+    
+    profiles:
+      active: private
+
+    jpa:
+        hibernate:
+            ddl-auto: update
+        properties:
+            hibernate:
+                show_sql: true
+                format_sql: true
+        database-platform: org.hibernate.dialect.MySQL8Dialect
+
+    servlet:
+        multipart:
+            max-file-size: 10MB
+            max-request-size: 10MB
+
+security:
+    jwt:
+        token:
+            secret-key: "생성된 secret key를 여기에 넣으세요"
+            access-token-expiration: 36000000
+            #            15분
+            refresh-token-expiration: 36000000
+#           1시간
+
+    mail:
+        host: smtp.gmail.com
+        port: 587
+        username: hyeran092020@gmail.com
+        password: nurj gkyg akuo fefr
+        properties:
+            mail:
+                smtp:
+                    auth: true
+                    timeout: 5000
+                    starttls:
+                        enable: true
+
+kakao:
+    client_id: 735bc3ec38cfd843679faa1343fb0f94
+    redirect_uri: http://localhost:8080/api/auth/callback
+#    redirect_uri: https://js3.jsflux.co.kr/api/auth/callback
+    api_url: https://kapi.kakao.com
+    token_url: https://kauth.kakao.com/oauth/token
+
+

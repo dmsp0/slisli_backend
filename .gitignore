@@ -40,3 +40,9 @@ out/
 application-db.yml
 application-oauth.yml
 application-secret.yml
+
+**/src/main/resources/static/**
+src/main/resources/application-private.yml
+
+
+.DS_Store
