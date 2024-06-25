@@ -96,8 +96,8 @@ public class AuthController {
             String jwtToken = jwtTokenProvider.createToken(user.getEmail(), user.getRole().name());
             String refreshToken = jwtTokenProvider.generateRefreshToken(user.getEmail());
 
-//            String redirectUrl = String.format("https://js3.jsflux.co.kr?token=%s&refreshToken=%s&email=%s&name=%s",
-            String redirectUrl = String.format("http://localhost:3000?token=%s&refreshToken=%s&email=%s&name=%s",
+            String redirectUrl = String.format("https://js3.jsflux.co.kr?token=%s&refreshToken=%s&email=%s&name=%s",
+//            String redirectUrl = String.format("http://localhost:3000?token=%s&refreshToken=%s&email=%s&name=%s",
                 URLEncoder.encode(jwtToken, StandardCharsets.UTF_8.toString()),
                 URLEncoder.encode(refreshToken, StandardCharsets.UTF_8.toString()),
                 URLEncoder.encode(user.getEmail(), StandardCharsets.UTF_8.toString()),

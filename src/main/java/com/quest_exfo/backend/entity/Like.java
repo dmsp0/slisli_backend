@@ -2,6 +2,8 @@ package com.quest_exfo.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Setter
 @Getter
@@ -18,6 +20,7 @@ public class Like {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "boothId", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Booth booth;
 
     @ManyToOne(fetch = FetchType.LAZY)
