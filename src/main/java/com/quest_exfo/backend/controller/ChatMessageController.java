@@ -10,7 +10,8 @@ import jakarta.annotation.security.PermitAll;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://js3.jsflux.co.kr")
 @RestController
 @RequestMapping("/api/chat")
 public class ChatMessageController {

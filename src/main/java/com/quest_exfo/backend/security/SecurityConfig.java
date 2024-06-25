@@ -53,11 +53,13 @@ public class SecurityConfig{
                         //기타
                         "/postTest",
                         "/getTest",
+
                         //알림
-                        "/sse/subscribe/**",
-                        //채팅
+                        "/sse/**",
+
                         "/api/chat/save"
-                        
+
+
                     ).permitAll()
                     .anyRequest().authenticated()
             )
@@ -74,8 +76,8 @@ public class SecurityConfig{
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(Arrays.asList("https://js3.jsflux.co.kr"));
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowedOrigins(Arrays.asList("https://js3.jsflux.co.kr"));
+//        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token","ACCESS_KEY","REFRESH_KEY"));
         configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
